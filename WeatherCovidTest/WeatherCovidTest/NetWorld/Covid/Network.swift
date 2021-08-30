@@ -23,7 +23,7 @@ struct Network {
         return "\(baseUrl)/summary"
     }
     
-    func getCovidCountry(slug : String) -> String {
+    func getCovidCountry(slug: String) -> String {
         return "\(baseUrl)/dayone/country/\(slug)"
     }
 }

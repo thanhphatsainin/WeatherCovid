@@ -19,7 +19,7 @@ class ViewControllerSave: UIViewController {
     var city = CityWorld(city: "Nam Định", lat: "20.4200", lon: "106.1683", country: "Vietnam", countryCode: "", adminCity: "", isCurrentLocation: false)
     var indexTemp = 0
     var indexMark = 0
-    var arrayWeatherDetailData : [WeatherDetail] = []
+    var arrayWeatherDetailData = [WeatherDetail]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,14 +37,13 @@ class ViewControllerSave: UIViewController {
     }
     
     func setup() {
-        indexTemp = UserDefaults.standard.value(forKey: KEY_TEMP_FORMAT) as! Int
+        indexTemp = UserDefaults.standard.value(forKey: KEYTEMPFORMAT) as? Int ?? 0
         showListWeatherDetail()
         notification(index: indexMark)
         checkSegment()
     }
     
-    func currentTimeInMilliSeconds()-> Int
-    {
+    func currentTimeInMilliSeconds() -> Int {
             let currentDate = Date()
             let since1970 = currentDate.timeIntervalSince1970
             return Int(since1970)
@@ -66,9 +65,9 @@ class ViewControllerSave: UIViewController {
     
     func notification(index : Int) {
         NotificationLocal.shared.clear()
-        for i in arrayWeatherDetailData {
+        for weatherDetailMark in arrayWeatherDetailData {
 //            print("ok : \(i.time)")
-            NotificationLocal.shared.create(title: "Sự kiện sắp diễn ra", body: i.city ?? "", time: CLong(i.time), index: index)
+            NotificationLocal.shared.create(title: "Sự kiện sắp diễn ra", body: weatherDetailMark.city ?? "", time: CLong(weatherDetailMark.time), index: index)
         }
     }
     
@@ -89,12 +88,12 @@ class ViewControllerSave: UIViewController {
             notification(index: 0)
             indexMark = 0
         }
-        UserDefaults.standard.set(indexMark, forKey: KEY_MARK_WEATHER)
+        UserDefaults.standard.set(indexMark, forKey: KEYMARKWEATHER)
         checkSegment()
     }
     
     func checkSegment() {
-        let index = UserDefaults.standard.integer(forKey: KEY_MARK_WEATHER)
+        let index = UserDefaults.standard.integer(forKey: KEYMARKWEATHER)
         switch index {
         case 0:
             notification(index: 0)
@@ -118,79 +117,80 @@ class ViewControllerSave: UIViewController {
     func showListWeatherDetail() {
         arrayWeatherDetailData.removeAll()
         //lay persistentContainer
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let container = appDelegate.persistentContainer
-        
-        // lay context du lieu
-        let context = container.viewContext
-        
-        //tao truy van (request) du lieu
-        let request = NSFetchRequest<WeatherDetail>(entityName: "WeatherDetail")
-        
-        //truy van tu context
-        if let weatherDetails = try? context.fetch(request){
-//            print("Have \(weatherDetails.count) weatherDetail")
-            for s in weatherDetails{
-                if checkExpires(weatherDetail: s) {
-                    arrayWeatherDetailData.append(s)
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            let container = appDelegate.persistentContainer
+            
+            // lay context du lieu
+            let context = container.viewContext
+            
+            //tao truy van (request) du lieu
+            let request = NSFetchRequest<WeatherDetail>(entityName: "WeatherDetail")
+            
+            //truy van tu context
+            if let weatherDetails = try? context.fetch(request){
+    //            print("Have \(weatherDetails.count) weatherDetail")
+                for weatherDetailf in weatherDetails{
+                    if checkExpires(weatherDetail: weatherDetailf) {
+                        arrayWeatherDetailData.append(weatherDetailf)
+                    }
                 }
+            } else {
+                print("Error!")
             }
-        }else{
-            print("Error!")
+        } else {
+            print("Error showListWeatherDetail")
         }
     }
     
-    func updateWeatherDetail() {
-        //lay persistentContainer
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let container = appDelegate.persistentContainer
-        
-        // lay context du lieu
-        let context = container.viewContext
-        
-        // tim student
-        //tao truy van (request) du lieu
-        let request = NSFetchRequest<WeatherDetail>(entityName: "WeatherDetail")
-        let time = 1
-        request.predicate = NSPredicate(format: "time == %@", time)
-        let weatherDetails = try? context.fetch(request)
-        
-        //update student
-        if let weatherDetails = weatherDetails{
-            for w in weatherDetails{
-                w.time = 1
-            }
-        }
-        
-        //save du lieu
-        if let _ = try? context.save(){
-            print("Update succses!")
-        }
-        else{
-            print("Update false!")
-        }
-    }
+//    func updateWeatherDetail() {
+//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//        let container = appDelegate.persistentContainer
+//
+//        // lay context du lieu
+//        let context = container.viewContext
+//
+//        // tim student
+//        //tao truy van (request) du lieu
+//        let request = NSFetchRequest<WeatherDetail>(entityName: "WeatherDetail")
+//        let time = 1
+//        request.predicate = NSPredicate(format: "time == %@", time)
+//        let weatherDetails = try? context.fetch(request)
+//
+//        //update student
+//        if let weatherDetails = weatherDetails{
+//            for w in weatherDetails{
+//                w.time = 1
+//            }
+//        }
+//
+//        //save du lieu
+//        if let _ = try? context.save(){
+//            print("Update succses!")
+//        } else {
+//            print("Update false!")
+//        }
+//    }
     
     func deleteWeatherDetail(index : Int) {
-        //lay persistentContainer
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let container = appDelegate.persistentContainer
-        
-        // lay context du lieu
-        let context = container.viewContext
-        
-        context.delete(arrayWeatherDetailData[index])
-        
-        //save du lieu
-        if let _ = try? context.save(){
-            print("Delete succses!")
-        }
-        else{
-            print("Delete false!")
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            let container = appDelegate.persistentContainer
+            
+            // lay context du lieu
+            let context = container.viewContext
+            
+            context.delete(arrayWeatherDetailData[index])
+            
+            //save du lieu
+            if let _ = try? context.save(){
+                print("Delete succses!")
+            } else {
+                print("Delete false!")
+            }
+        } else {
+            print("Error deleteWeatherDetail")
         }
     }
     //------
-
 }
 
 extension ViewControllerSave : UITableViewDelegate, UITableViewDataSource{
@@ -199,19 +199,23 @@ extension ViewControllerSave : UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellMarkWeather") as! TableViewCellMarkWeather
-        if indexTemp == 0 {
-            cell.khoitaoDoC(item: arrayWeatherDetailData[indexPath.row])
-        }
-        else{
-            cell.khoitaoDoF(item: arrayWeatherDetailData[indexPath.row])
-        }
-        cell.backgroundColor = UIColor.white
-        cell.clipsToBounds = true
-        cell.view.layer.cornerRadius = cell.view.frame.height/3
-        cell.img.layer.cornerRadius = cell.img.frame.height/3
+        
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "cellMarkWeather") as? TableViewCellMarkWeather {
+            if indexTemp == 0 {
+                cell.khoitaoDoC(item: arrayWeatherDetailData[indexPath.row])
+            } else {
+                cell.khoitaoDoF(item: arrayWeatherDetailData[indexPath.row])
+            }
+            cell.backgroundColor = UIColor.white
+            cell.clipsToBounds = true
+            cell.view.layer.cornerRadius = cell.view.frame.height/3
+            cell.img.layer.cornerRadius = cell.img.frame.height/3
 
-        return cell
+            return cell
+        } else {
+            print("Error!")
+        }
+        return UITableViewCell()
     }
     
     // ham de Delete
@@ -228,15 +232,13 @@ extension ViewControllerSave : UITableViewDelegate, UITableViewDataSource{
     
     // animation
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.layer.transform = CATransform3DMakeScale(0.1,0.1,1)
+        cell.layer.transform = CATransform3DMakeScale(0.1, 0.1, 1)
         UIView.animate(withDuration: 0.5, animations: {
-            cell.layer.transform = CATransform3DMakeScale(1.05,1.05,1)
-            },completion: { finished in
+            cell.layer.transform = CATransform3DMakeScale(1.05, 1.05, 1)
+            }, completion: { _ in
                 UIView.animate(withDuration: 0.2, animations: {
-                    cell.layer.transform = CATransform3DMakeScale(1,1,1)
+                    cell.layer.transform = CATransform3DMakeScale(1, 1, 1)
                 })
         })
     }
-    
 }
-

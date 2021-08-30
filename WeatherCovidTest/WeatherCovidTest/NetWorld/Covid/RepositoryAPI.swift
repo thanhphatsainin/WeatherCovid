@@ -8,16 +8,16 @@
 import Foundation
 
 class RepositoryAPI {
-    func getListCountry(completion: @escaping (Result<[Country], NetworkError>) -> Void){
+    func getListCountry(completion: @escaping (Result<[Country], NetworkError>) -> Void) {
         APIService.shared.pullJSONData(url: URL(string: Network.shared.getListCountry())) { (result) in
             switch result {
             case .success(let JSONData):
                 var listCountry = [Country]()
                 let countryData = try? JSONDecoder().decode([Country].self, from: JSONData)
-                if let countryData = countryData{
-                    for i in countryData {
+                if let countryData = countryData {
+                    for countryf in countryData {
                         var country = Country()
-                        country = i
+                        country = countryf
                         listCountry.append(country)
                     }
                     completion(.success(listCountry))
@@ -28,12 +28,12 @@ class RepositoryAPI {
         }
     }
     
-    func getCovidGlobal(completion: @escaping (Result<GlobalState, NetworkError>) -> Void){
+    func getCovidGlobal(completion: @escaping (Result<GlobalState, NetworkError>) -> Void) {
         APIService.shared.pullJSONData(url: URL(string: Network.shared.getCovidGlobal())) { (result) in
             switch result {
             case .success(let JSONData):
                 let globalStateData = try? JSONDecoder().decode(GlobalState.self, from: JSONData)
-                if let globalStateData = globalStateData{
+                if let globalStateData = globalStateData {
                     var globalstate = GlobalState()
                     globalstate = globalStateData
                     completion(.success(globalstate))
@@ -44,16 +44,16 @@ class RepositoryAPI {
         }
     }
     
-    func getCovidCountry(slug : String ,completion: @escaping (Result<[CovidCountry], NetworkError>) -> Void){
+    func getCovidCountry(slug : String, completion: @escaping (Result<[CovidCountry], NetworkError>) -> Void){
         APIService.shared.pullJSONData(url: URL(string: Network.shared.getCovidCountry(slug: slug))) { (result) in
             switch result {
             case .success(let JSONData):
                 var listCovidCountry = [CovidCountry]()
                 let covidCountryData = try? JSONDecoder().decode([CovidCountry].self, from: JSONData)
                 if let covidCountryData = covidCountryData{
-                    for i in covidCountryData {
+                    for covidCountryf in covidCountryData {
                         var covidCountry = CovidCountry()
-                        covidCountry = i
+                        covidCountry = covidCountryf
                         listCovidCountry.append(covidCountry)
                     }
                     completion(.success(listCovidCountry))

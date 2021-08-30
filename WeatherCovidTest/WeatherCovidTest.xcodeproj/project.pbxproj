@@ -45,7 +45,6 @@
 		115966F226D20117005E60F5 /* ViewControllerSearchCity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115966F126D20117005E60F5 /* ViewControllerSearchCity.swift */; };
 		115966F526D24507005E60F5 /* ViewControllerSeeDetail7Ngay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115966F426D24507005E60F5 /* ViewControllerSeeDetail7Ngay.swift */; };
 		115966F826D245D8005E60F5 /* TableViewCellSeeDetails7Ngay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115966F726D245D8005E60F5 /* TableViewCellSeeDetails7Ngay.swift */; };
-		115966FE26D27D46005E60F5 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115966FD26D27D45005E60F5 /* Reachability.swift */; };
 		1159670226D32CF1005E60F5 /* ViewControllerSettingTemp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1159670126D32CF1005E60F5 /* ViewControllerSettingTemp.swift */; };
 		1159670526D32F65005E60F5 /* SettingTemp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1159670426D32F65005E60F5 /* SettingTemp.swift */; };
 		1159670E26D345B5005E60F5 /* NotificationLocal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1159670D26D345B5005E60F5 /* NotificationLocal.swift */; };
@@ -93,7 +92,6 @@
 		115966F126D20117005E60F5 /* ViewControllerSearchCity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerSearchCity.swift; sourceTree = "<group>"; };
 		115966F426D24507005E60F5 /* ViewControllerSeeDetail7Ngay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerSeeDetail7Ngay.swift; sourceTree = "<group>"; };
 		115966F726D245D8005E60F5 /* TableViewCellSeeDetails7Ngay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellSeeDetails7Ngay.swift; sourceTree = "<group>"; };
-		115966FD26D27D45005E60F5 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		1159670126D32CF1005E60F5 /* ViewControllerSettingTemp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerSettingTemp.swift; sourceTree = "<group>"; };
 		1159670426D32F65005E60F5 /* SettingTemp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTemp.swift; sourceTree = "<group>"; };
 		1159670D26D345B5005E60F5 /* NotificationLocal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationLocal.swift; sourceTree = "<group>"; };
@@ -151,7 +149,6 @@
 		1159665C26CDF8AF005E60F5 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				115966FC26D27D30005E60F5 /* CheckWifi */,
 				115966D126D10C7A005E60F5 /* Weather */,
 				115966D026D10C6E005E60F5 /* Covid */,
 				1159668B26CE9A2B005E60F5 /* Database */,
@@ -290,14 +287,6 @@
 			path = Weather;
 			sourceTree = "<group>";
 		};
-		115966FC26D27D30005E60F5 /* CheckWifi */ = {
-			isa = PBXGroup;
-			children = (
-				115966FD26D27D45005E60F5 /* Reachability.swift */,
-			);
-			path = CheckWifi;
-			sourceTree = "<group>";
-		};
 		11B961DC26D3CC3400BC5FA8 /* Save */ = {
 			isa = PBXGroup;
 			children = (
@@ -313,6 +302,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1159664B26CDEA37005E60F5 /* Build configuration list for PBXNativeTarget "WeatherCovidTest" */;
 			buildPhases = (
+				114D855E26D8D66400BAA29F /* ShellScript */,
 				1159663026CDEA35005E60F5 /* Sources */,
 				1159663126CDEA35005E60F5 /* Frameworks */,
 				1159663226CDEA35005E60F5 /* Resources */,
@@ -373,6 +363,26 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		114D855E26D8D66400BAA29F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1159663026CDEA35005E60F5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -411,7 +421,6 @@
 				1159668326CE6063005E60F5 /* TableViewCellListCovidCountry.swift in Sources */,
 				115966DF26D1216D005E60F5 /* NetWorkWeather.swift in Sources */,
 				1159665026CDEF52005E60F5 /* ViewControllerWeather.swift in Sources */,
-				115966FE26D27D46005E60F5 /* Reachability.swift in Sources */,
 				11B961DA26D394F100BC5FA8 /* TableViewCellMarkWeather.swift in Sources */,
 				1159666726CDFC0B005E60F5 /* Extension+Int.swift in Sources */,
 				1159667A26CE0027005E60F5 /* CovidCountry.swift in Sources */,

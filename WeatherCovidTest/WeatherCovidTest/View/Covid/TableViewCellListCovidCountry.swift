@@ -21,7 +21,7 @@ class TableViewCellListCovidCountry: UITableViewCell {
         // Initialization code
     }
     
-    func khoitao(item : CovidCountry){
+    func khoitao(item: CovidCountry) {
         viewListCovidCountry.layer.cornerRadius = viewListCovidCountry.frame.height/3
         dateLable.text = item.date.subStringTime()
         confirmedLable.text = item.confirmed.format()
@@ -33,5 +33,4 @@ class TableViewCellListCovidCountry: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-
 }

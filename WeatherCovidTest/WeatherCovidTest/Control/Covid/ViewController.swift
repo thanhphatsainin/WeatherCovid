@@ -77,15 +77,14 @@ class ViewController: UIViewController {
         deathWorldLable.text     = self.globalstate.global.totalDeaths.format()
         recoveredWorldLable.text = self.globalstate.global.totalRecovered.format()
         
-        if listCovidCountry.count > 0  {
+        if !listCovidCountry.isEmpty  {
             let covidCountry = self.listCovidCountry[listCovidCountry.count-1]
             dateCountryLable.text     = covidCountry.date.subStringTime()
             infectedCoutryLable.text  = covidCountry.confirmed.format()
             deathCoutryLable.text     = covidCountry.deaths.format()
             recoveredCoutryLable.text = covidCountry.recovered.format()
             nameCountryTF.text        = covidCountry.country
-        }
-        else{
+        } else {
             infectedCoutryLable.text  = "0"
             deathCoutryLable.text     = "0"
             recoveredCoutryLable.text = "0"
@@ -129,21 +128,26 @@ class ViewController: UIViewController {
     }
 
     @IBAction func clickShowListCountry(_ sender: Any) {
-        let MHLISTCOUNTRY = storyboard?.instantiateViewController(identifier: "MHLISTCOUNTRY") as! ViewControllerListCountry
-        MHLISTCOUNTRY.delegateChooseCountry = self
-        self.navigationController?.pushViewController(MHLISTCOUNTRY, animated: true)
-        
+        if let MHLISTCOUNTRY = storyboard?.instantiateViewController(identifier: "MHLISTCOUNTRY") as? ViewControllerListCountry {
+            MHLISTCOUNTRY.delegateChooseCountry = self
+            self.navigationController?.pushViewController(MHLISTCOUNTRY, animated: true)
+        } else {
+            print("Error click ShowListCountry")
+        }
     }
     
     @IBAction func clickSeeDetail(_ sender: Any) {
-        let MHLISTCOVIDCOUNTRY = storyboard?.instantiateViewController(identifier: "MHLISTCOVIDCOUNTRY") as! ViewControllerListCovidCountry
-        MHLISTCOVIDCOUNTRY.nameCountry = nameCountryTF.text ?? "Cuba"
-        MHLISTCOVIDCOUNTRY.listCovidCountryNoChange = self.listCovidCountry
-        self.navigationController?.pushViewController(MHLISTCOVIDCOUNTRY, animated: true)
+        if let MHLISTCOVIDCOUNTRY = storyboard?.instantiateViewController(identifier: "MHLISTCOVIDCOUNTRY") as? ViewControllerListCovidCountry {
+            MHLISTCOVIDCOUNTRY.nameCountry = nameCountryTF.text ?? "Cuba"
+            MHLISTCOVIDCOUNTRY.listCovidCountryNoChange = self.listCovidCountry
+            self.navigationController?.pushViewController(MHLISTCOVIDCOUNTRY, animated: true)
+        } else {
+            print("Error click SeeDetail")
+        }
     }
 }
 
-extension ViewController : ChooseCountry{
+extension ViewController : ChooseCountry {
     func sendCountry(country: Country) {
         self.country = country
         self.nameCountryTF.text = country.name

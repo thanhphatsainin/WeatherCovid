@@ -58,13 +58,12 @@ class ViewControllerSearchCity: UIViewController {
     
     func searchName(nameCity : String){
         listCitySearch.removeAll()
-        if nameCity == "" {
+        if nameCity.isEmpty {
             listCitySearch = allLocation
-        }
-        else{
-            for i in allLocation {
-                if i.city.contains(nameCity) {
-                    listCitySearch.append(i)
+        } else {
+            for cityWorld in allLocation {
+                if cityWorld.city.contains(nameCity) {
+                    listCitySearch.append(cityWorld)
                 }
             }
         }
@@ -76,7 +75,7 @@ class ViewControllerSearchCity: UIViewController {
     }
 }
 
-extension ViewControllerSearchCity : UITableViewDelegate, UITableViewDataSource{
+extension ViewControllerSearchCity : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listCitySearch.count
     }
@@ -100,7 +99,7 @@ extension ViewControllerSearchCity : UITableViewDelegate, UITableViewDataSource{
     
 }
 
-extension ViewControllerSearchCity : UISearchBarDelegate{
+extension ViewControllerSearchCity : UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard let name = searchBar.searchTextField.text else {
             return

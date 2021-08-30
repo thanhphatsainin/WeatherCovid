@@ -19,8 +19,6 @@ class TableViewCellThoiTiet7Ngay: UITableViewCell {
         // Initialization code
     }
     
-    
-    
     func khoitaoTempC(listData :  ListData) {
         view.layer.cornerRadius = view.frame.height/3
         let dateFormatCoordinate = DateFormatter()
@@ -50,5 +48,4 @@ class TableViewCellThoiTiet7Ngay: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-
 }

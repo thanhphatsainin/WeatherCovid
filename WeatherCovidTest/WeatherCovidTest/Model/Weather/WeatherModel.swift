@@ -8,11 +8,11 @@
 import Foundation
 
 //---- thoi tiet trong ngay -----
-struct Weather : Codable {
-    let id : Int
-    let main : String
-    let description : String
-    let icon : String
+struct Weather: Codable {
+    var id :Int
+    var main: String
+    var description : String
+    var icon : String
     
     init() {
         id = 0
@@ -29,24 +29,23 @@ struct Weather : Codable {
     }
     
     func toString() {
-        print(self.id,self.main, self.description, self.icon)
+        print(self.id, self.main, self.description, self.icon)
     }
 }
 
-struct Main : Codable {
-    let temp : Double
-    let humidity : Double
+struct Main: Codable {
+    var temp : Double
+    var humidity : Double
     
     init() {
         temp = 0
         humidity = 0
     }
     
-    init(temp : Double, humidity : Double) {
+    init(temp: Double, humidity: Double) {
         self.temp = temp
         self.humidity = humidity
     }
-    
     
     func toString() {
         print(self.temp, self.humidity)
@@ -54,14 +53,14 @@ struct Main : Codable {
     
 }
 
-struct Wind : Codable {
-    let speed : Double
+struct Wind: Codable {
+    var speed: Double
     
     init() {
         speed = 0
     }
     
-    init(speed : Double) {
+    init(speed: Double) {
         self.speed = speed
     }
     
@@ -71,14 +70,14 @@ struct Wind : Codable {
     
 }
 
-struct Sys : Codable {
-    let country : String
+struct Sys: Codable {
+    var country: String
     
     init() {
         country = ""
     }
     
-    init(country : String) {
+    init(country: String) {
         self.country = country
     }
     
@@ -88,13 +87,13 @@ struct Sys : Codable {
 }
 
 
-struct ThoiTiet : Codable {
-    var weather : [Weather]
-    var main : Main
-    var wind : Wind
-    var dt : CLong
-    var sys : Sys
-    var name : String
+struct ThoiTiet: Codable {
+    var weather: [Weather]
+    var main: Main
+    var wind: Wind
+    var dt: CLong
+    var sys: Sys
+    var name: String
     
     init() {
         weather = []
@@ -105,7 +104,7 @@ struct ThoiTiet : Codable {
         name = ""
     }
 
-    init(weather : [Weather], main : Main, wind : Wind, dt : CLong, sys : Sys, name : String) {
+    init(weather: [Weather], main: Main, wind: Wind, dt: CLong, sys: Sys, name: String) {
         self.weather = weather
         self.main = main
         self.wind = wind
@@ -122,7 +121,7 @@ struct ThoiTiet : Codable {
 // -------Thoi tiet 3h goi 1 lan, tong 6 ngay----------
 struct ThoiTiet3H6Day: Decodable {
     var list: [Weather2]
-    var city : City
+    var city: City
     
     init() {
         list = []
@@ -130,9 +129,9 @@ struct ThoiTiet3H6Day: Decodable {
     }
 }
 
-struct City : Decodable {
-    let name : String
-    let country : String
+struct City: Decodable {
+    let name: String
+    let country: String
     
     init() {
         name = ""
@@ -142,10 +141,10 @@ struct City : Decodable {
 
 // (k su dung cai thoi tiet 1 ngay dc vi da thay doi 1 so cai)
 struct Weather2: Decodable {
-    var weather : [Weather]
-    var main : Main
-    var wind : Wind
-    var dt : CLong
+    var weather: [Weather]
+    var main: Main
+    var wind: Wind
+    var dt: CLong
     
     init() {
         weather = []
@@ -161,22 +160,22 @@ struct Weather2: Decodable {
 
 //---------------Thoi tiet 7 ngay-------
 
-struct ThoiTiet7Ngay : Codable{
-    var data : [ListData]
+struct ThoiTiet7Ngay: Codable{
+    var data: [ListData]
     
     init() {
         data = [ListData]()
     }
     
-    init(data : [ListData]){
+    init(data: [ListData]) {
         self.data = data
     }
 }
 
-struct ListData : Codable{
-    var ts : CLong
-    var weather : Weather7ngay
-    var temp : Double
+struct ListData: Codable {
+    var ts: CLong
+    var weather: Weather7ngay
+    var temp: Double
     
     init() {
         ts = 0
@@ -184,17 +183,17 @@ struct ListData : Codable{
         temp = 0
     }
     
-    init(ts : CLong, weather : Weather7ngay, temp : Double){
+    init(ts: CLong, weather: Weather7ngay, temp: Double){
         self.ts = ts
         self.weather = weather
         self.temp = temp
     }
 }
 
-struct Weather7ngay : Codable {
-    let icon : String
-    let code : Int
-    let description : String
+struct Weather7ngay: Codable {
+    var icon: String
+    var code: Int
+    var description: String
     
     init() {
         icon = ""
@@ -202,12 +201,10 @@ struct Weather7ngay : Codable {
         description = ""
     }
     
-    init(icon : String, code : Int, description : String) {
+    init(icon: String, code: Int, description: String) {
         self.icon = icon
         self.code = code
         self.description = description
     }
 }
-
 //---------------
-

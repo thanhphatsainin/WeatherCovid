@@ -24,9 +24,7 @@ class ViewControllerWeather: UIViewController {
     var thoitiet3H6Day = ThoiTiet3H6Day()
     var thoitiet7Ngay = ThoiTiet7Ngay()
     var city = CityWorld(city: "Nam Định", lat: "20.4200", lon: "106.1683", country: "Vietnam", countryCode: "", adminCity: "", isCurrentLocation: false)
-    var indexTemp = UserDefaults.standard.value(forKey: KEY_TEMP_FORMAT) as! Int
-    
-    let reachability = try! Reachability() // check Internet
+    var indexTemp = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,8 +35,7 @@ class ViewControllerWeather: UIViewController {
     func setup() {
         thoiTiet7NgayTableView.dataSource = self
         thoiTiet7NgayTableView.delegate = self
-        // notification
-//        NotificationLocal.shared.create(title: "Hello", body: "Nam", dateString: "Monday 2021-08-23 11:03:20")
+        indexTemp = UserDefaults.standard.value(forKey: KEYTEMPFORMAT) as? Int ?? 0
     }
     
     private func loadAPI() {
@@ -74,21 +71,20 @@ class ViewControllerWeather: UIViewController {
         }
     }
     
-    func loadData(){
+    func loadData() {
         self.cityLable.text = city.city
         self.countryLabel.text = city.country
         
 //        self.cityLable.text = thoitiet.name
 //        self.countryLabel.text = thoitiet.sys.country
         
-        if(thoitiet.weather.count == 0){
+        if thoitiet.weather.isEmpty {
             let alter = UIAlertController(title: "Thong bao", message: "Thanh Pho KHong co du lieu!", preferredStyle: .alert)
-            let actionOk = UIAlertAction(title: "OK", style: .default) { (UIAlertAction) in
+            let actionOk = UIAlertAction(title: "OK", style: .default) { (_) in
             }
             alter.addAction(actionOk)
             self.present(alter, animated: true, completion: nil)
-        }
-        else{
+        } else {
             let urlString = "http://openweathermap.org/img/wn/" + thoitiet.weather[0].icon + ".png"
             if let url = URL(string: urlString) {
                 self.iconImage.setImage(from: url)
@@ -96,8 +92,7 @@ class ViewControllerWeather: UIViewController {
             self.mainLabel.text = thoitiet.weather[0].main
             if indexTemp == 0 {
                 self.tempLabel.text = String(Int(round(thoitiet.main.temp - 273))) + "°C"
-            }
-            else{
+            } else {
                 self.tempLabel.text = String(Int(round(thoitiet.main.temp))) + "°F"
             }
             
@@ -114,7 +109,6 @@ class ViewControllerWeather: UIViewController {
         }
     }
     
-    
     @IBAction func clickSettingTemp(_ sender: UIBarButtonItem) {
         self.performSegue(withIdentifier: "chuyenMHSettingTemp", sender: nil)
     }
@@ -124,14 +118,14 @@ class ViewControllerWeather: UIViewController {
     }
     
     @IBAction func clickSeeDetails(_ sender: UIButton) {
-        //MHSeeDetails
-        let MHSeeDetails = self.storyboard?.instantiateViewController(identifier: "MHSeeDetails") as! ViewControllerSeeDetail7Ngay
-        MHSeeDetails.city = self.city
-        self.navigationController?.pushViewController(MHSeeDetails, animated: true)
-        
+        if let MHSeeDetails = self.storyboard?.instantiateViewController(identifier: "MHSeeDetails") as? ViewControllerSeeDetail7Ngay {
+            MHSeeDetails.city = self.city
+            self.navigationController?.pushViewController(MHSeeDetails, animated: true)
+        } else {
+            print("Error click See Detail")
+        }
     }
     
-    //-----test---------
     func api1() {
         repositoryAPIWeather.getThoiTietByLocate(lat: 20.4200, lon: 106.1683) { result in
             switch result {
@@ -167,48 +161,13 @@ class ViewControllerWeather: UIViewController {
             }
         }
     }
-    //------
-    
-    //-----Check wifi------------
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        DispatchQueue.main.async {
-            self.reachability.whenReachable = { reachability in
-                if reachability.connection == .wifi {
-                    print("Reachable via WiFi")
-                } else {
-                    print("Reachable via Cellular")
-                }
-                self.view.window?.rootViewController?.dismiss(animated: true)
-            }
-            self.reachability.whenUnreachable = { _ in
-                print("Not reachable")
-//                if let networkVC = self.storyboard?.instantiateViewController(identifier: "NetworkErrorViewController") as? NetworkErrorViewController{
-//                    self.present(networkVC, animated: true)
-//                }
-                let alter = UIAlertController(title: "Canh bao", message: "Not Internet. Require open Wifi or 3G.", preferredStyle: .alert)
-                let alterOK = UIAlertAction(title: "OK", style: .cancel) { (UIAlertAction) in
-                    exit(0)
-                }
-                alter.addAction(alterOK)
-                self.present(alter, animated: true, completion: nil)
-            }
-            
-            do {
-                try self.reachability.startNotifier()
-            } catch {
-                print("Unable to start notifier")
-            }
-        }
     }
-
-    deinit {
-        reachability.stopNotifier()
-    }
-    //---------------//
 }
 
-extension ViewControllerWeather : UITableViewDelegate, UITableViewDataSource{
+extension ViewControllerWeather : UITableViewDelegate, UITableViewDataSource {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let controller = segue.destination as? ViewControllerSearchCity {
@@ -225,20 +184,22 @@ extension ViewControllerWeather : UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellThoiTiet7Ngay") as! TableViewCellThoiTiet7Ngay
-        if indexTemp == 0 {
-            cell.khoitaoTempC(listData: thoitiet7Ngay.data[indexPath.row])
+        
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "cellThoiTiet7Ngay") as? TableViewCellThoiTiet7Ngay {
+            if indexTemp == 0 {
+                cell.khoitaoTempC(listData: thoitiet7Ngay.data[indexPath.row])
+            } else {
+                cell.khoitaoTempF(listData: thoitiet7Ngay.data[indexPath.row])
+            }
+            return cell
+        } else {
+            print("DequeueReusableCell failed while casting")
         }
-        else{
-            cell.khoitaoTempF(listData: thoitiet7Ngay.data[indexPath.row])
-        }
-        return cell
+        return UITableViewCell()
     }
-    
 }
 
-extension ViewControllerWeather : SearchCity, SettingTemp{
-    
+extension ViewControllerWeather : SearchCity, SettingTemp {
     func sendCity(city: CityWorld) {
         self.city = city
         self.loadAPI()
@@ -250,5 +211,3 @@ extension ViewControllerWeather : SearchCity, SettingTemp{
         self.loadAPI()
     }
 }
-
-

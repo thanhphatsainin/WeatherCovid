@@ -32,7 +32,6 @@ class ViewControllerListCovidCountry: UIViewController {
         }
     }
 
-
     @IBAction func actionFitlerListCovidCountry(_ sender: UIBarButtonItem) {
         self.performSegue(withIdentifier: "showDatePicker", sender: nil)
     }
@@ -59,29 +58,33 @@ class ViewControllerListCovidCountry: UIViewController {
     
     func loadTableChoseDate(stringDate : String) {
         listCovidShow.removeAll()
-        for i in listCovidCountryNoChange {
-            if i.date.subStringTime() == stringDate {
-                listCovidShow.append(i)
+        for covidCountry in listCovidCountryNoChange {
+            if covidCountry.date.subStringTime() == stringDate {
+                listCovidShow.append(covidCountry)
             }
         }
         listCovidCountryTableView.reloadData()
     }
 }
 
-extension ViewControllerListCovidCountry : UITableViewDataSource, UITableViewDelegate{
+extension ViewControllerListCovidCountry : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         listCovidShow.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellListCovidCountry") as! TableViewCellListCovidCountry
-        let item = listCovidShow[indexPath.row]
-        cell.khoitao(item: item)
-        return cell
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "cellListCovidCountry") as? TableViewCellListCovidCountry {
+            let item = listCovidShow[indexPath.row]
+            cell.khoitao(item: item)
+            return cell
+        } else {
+            print("Error!")
+        }
+        return UITableViewCell()
     }
 }
 
-extension ViewControllerListCovidCountry : ChooseDate{
+extension ViewControllerListCovidCountry : ChooseDate {
     func sendDate(date: Date) {
         self.date = date
         let datefomat = DateFormatter()

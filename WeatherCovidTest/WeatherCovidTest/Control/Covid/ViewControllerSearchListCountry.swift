@@ -51,15 +51,14 @@ class ViewControllerSearchListCountry: UIViewController {
         }
     }
     
-    func searchName(nameCountry : String){
+    func searchName(nameCountry : String) {
         listCountrySearch.removeAll()
-        if nameCountry == "" {
+        if nameCountry.isEmpty {
             listCountrySearch = listCountry
-        }
-        else{
-            for i in listCountry {
-                if i.name.contains(nameCountry) {
-                    listCountrySearch.append(i)
+        } else {
+            for country in listCountry {
+                if country.name.contains(nameCountry) {
+                    listCountrySearch.append(country)
                 }
             }
         }
@@ -73,7 +72,7 @@ class ViewControllerSearchListCountry: UIViewController {
     }
 }
 
-extension ViewControllerSearchListCountry : UITableViewDataSource, UITableViewDelegate{
+extension ViewControllerSearchListCountry : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return listCountrySearch.count
     }
@@ -94,10 +93,12 @@ extension ViewControllerSearchListCountry : UITableViewDataSource, UITableViewDe
 //        let index = listCountry[indexPath.row]
 //        self.delegateChooseCountry?.sendCountry(country: index)
 //        self.navigationController?.popViewController(animated: true)
-        
-        let MHCOVID = (self.navigationController?.viewControllers[0])! as! ViewController
-        MHCOVID.sendCountry(country: listCountrySearch[indexPath.row])
-        self.navigationController?.popToViewController(MHCOVID, animated: true)
+        if let MHCOVID = (self.navigationController?.viewControllers[0])! as? ViewController {
+            MHCOVID.sendCountry(country: listCountrySearch[indexPath.row])
+            self.navigationController?.popToViewController(MHCOVID, animated: true)
+        } else {
+            print("Error go MHCOVID")
+        }
     }
 }
 
@@ -121,4 +122,3 @@ extension ViewControllerSearchListCountry : UISearchBarDelegate{
         }
     }
 }
-

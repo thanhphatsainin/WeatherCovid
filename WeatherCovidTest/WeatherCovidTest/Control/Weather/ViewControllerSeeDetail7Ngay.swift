@@ -15,9 +15,9 @@ class ViewControllerSeeDetail7Ngay: UIViewController {
     @IBOutlet weak var navigationWeatherDetail: UINavigationItem!
     private let repositoryAPIWeather = RepositoryAPIWeather()
     var thoitiet3H6Day = ThoiTiet3H6Day()
-    var arrayWeatherDetailData : [WeatherDetail] = []
+    var arrayWeatherDetailData = [WeatherDetail]()
     var city = CityWorld(city: "Nam Định", lat: "20.4200", lon: "106.1683", country: "Vietnam", countryCode: "", adminCity: "", isCurrentLocation: false)
-    var indexTemp = UserDefaults.standard.value(forKey: KEY_TEMP_FORMAT) as! Int
+    var indexTemp = UserDefaults.standard.value(forKey: KEYTEMPFORMAT) as? Int ?? 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,136 +58,142 @@ class ViewControllerSeeDetail7Ngay: UIViewController {
         }
     }
     //---- core data
-    func addWeatherDetail(weather2 : Weather2) {
-        
-        //lay persistentContainer
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let container = appDelegate.persistentContainer
-        
-        // lay context du lieu
-        let context = container.viewContext
-        
-        // load mo ta du lieu student
-        let description = NSEntityDescription.entity(forEntityName: "WeatherDetail", in: context)!
+    func addWeatherDetail(weather2: Weather2) {
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            let container = appDelegate.persistentContainer
+            
+            // lay context du lieu
+            let context = container.viewContext
+            
+            let description = NSEntityDescription.entity(forEntityName: "WeatherDetail", in: context)!
 
-        //tao student
-        let weatherDetail = WeatherDetail(entity: description, insertInto: context)
-        weatherDetail.icon = weather2.weather[0].icon
-        weatherDetail.time = Double(weather2.dt)
-        weatherDetail.humidity = weather2.main.humidity
-        weatherDetail.temp = weather2.main.temp
-        weatherDetail.speed = weather2.wind.speed
-        weatherDetail.main = weather2.weather[0].main
-        weatherDetail.city = city.city
-        
-        //save du lieu
-        if let _ = try? context.save(){
-            print("Add succses!")
-        }
-        else{
-            print("Add false!")
+            let weatherDetail = WeatherDetail(entity: description, insertInto: context)
+            weatherDetail.icon = weather2.weather[0].icon
+            weatherDetail.time = Double(weather2.dt)
+            weatherDetail.humidity = weather2.main.humidity
+            weatherDetail.temp = weather2.main.temp
+            weatherDetail.speed = weather2.wind.speed
+            weatherDetail.main = weather2.weather[0].main
+            weatherDetail.city = city.city
+            
+            //save du lieu
+            if let _ = try? context.save(){
+                print("Add succses!")
+            } else {
+                print("Add false!")
+            }
+        } else {
+            print("Error addWeatherDetail")
         }
     }
     
     // database
     func showListWeatherDetail() {
         arrayWeatherDetailData.removeAll()
-        //lay persistentContainer
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let container = appDelegate.persistentContainer
-        
-        // lay context du lieu
-        let context = container.viewContext
-        
-        //tao truy van (request) du lieu
-        let request = NSFetchRequest<WeatherDetail>(entityName: "WeatherDetail")
-        
-        //truy van tu context
-        if let weatherDetails = try? context.fetch(request){
-//            print("Have \(weatherDetails.count) weatherDetail")
-            for s in weatherDetails{
-                arrayWeatherDetailData.append(s)
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            let container = appDelegate.persistentContainer
+            
+            // lay context du lieu
+            let context = container.viewContext
+            
+            //tao truy van (request) du lieu
+            let request = NSFetchRequest<WeatherDetail>(entityName: "WeatherDetail")
+            
+            //truy van tu context
+            if let weatherDetails = try? context.fetch(request) {
+    //            print("Have \(weatherDetails.count) weatherDetail")
+                for weatherD in weatherDetails {
+                    arrayWeatherDetailData.append(weatherD)
+                }
+            } else {
+                print("Error!")
             }
-        }else{
-            print("Error!")
+        } else {
+            print("Error showListWeatherDetail")
         }
     }
     
-    func deleteWeatherDetail(index : Int) {
-        //lay persistentContainer
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let container = appDelegate.persistentContainer
-        
-        // lay context du lieu
-        let context = container.viewContext
-        
-        context.delete(arrayWeatherDetailData[index])
-        
-        //save du lieu
-        if let _ = try? context.save(){
-            print("Delete succses!")
-        }
-        else{
-            print("Delete false!")
+    func deleteWeatherDetail(index: Int) {
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            let container = appDelegate.persistentContainer
+            
+            // lay context du lieu
+            let context = container.viewContext
+            
+            context.delete(arrayWeatherDetailData[index])
+            
+            //save du lieu
+            if let _ = try? context.save() {
+                print("Delete succses!")
+            } else {
+                print("Delete false!")
+            }
+        } else {
+            print("Error deleteWeatherDetail")
         }
     }
     //----------
-
 }
 
-extension ViewControllerSeeDetail7Ngay : UITableViewDelegate, UITableViewDataSource{
+extension ViewControllerSeeDetail7Ngay : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return thoitiet3H6Day.list.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellSeeDetails") as! TableViewCellSeeDetails7Ngay
-        if indexTemp == 0 {
-            cell.khoitaoDoC(item: thoitiet3H6Day.list[indexPath.row])
-        }
-        else{
-            cell.khoitaoDoF(item: thoitiet3H6Day.list[indexPath.row])
-        }
-        cell.backgroundColor = UIColor.white
-        cell.clipsToBounds = true
-        cell.view.layer.cornerRadius = cell.view.frame.height/3
-        cell.img.layer.cornerRadius = cell.img.frame.height/3
-        cell.markButton.tag = indexPath.row
         
-        let isMark = checkExitMark(item: thoitiet3H6Day.list[indexPath.row])
-        let image = isMark ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
-        cell.markButton.setImage(image, for: .normal)
-        cell.markButton.addTarget(self, action: #selector(tickClicked), for: .touchUpInside)
-        return cell
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "cellSeeDetails") as? TableViewCellSeeDetails7Ngay {
+            if indexTemp == 0 {
+                cell.khoitaoDoC(item: thoitiet3H6Day.list[indexPath.row])
+            } else {
+                cell.khoitaoDoF(item: thoitiet3H6Day.list[indexPath.row])
+            }
+            cell.backgroundColor = UIColor.white
+            cell.clipsToBounds = true
+            cell.view.layer.cornerRadius = cell.view.frame.height/3
+            cell.img.layer.cornerRadius = cell.img.frame.height/3
+            cell.markButton.tag = indexPath.row
+            
+            let isMark = checkExitMark(item: thoitiet3H6Day.list[indexPath.row])
+            let image = isMark ? UIImage(systemName: "heart.fill") : UIImage(systemName: "heart")
+            cell.markButton.setImage(image, for: .normal)
+            cell.markButton.addTarget(self, action: #selector(tickClicked), for: .touchUpInside)
+            return cell
+        } else {
+              // code
+            print("Error!")
+        }
+        return UITableViewCell()
     }
     
     @objc func tickClicked(_ sender: UIButton!) {
         showListWeatherDetail()
-        let cellTop = seeDetailsTableView.cellForRow(at: NSIndexPath(row: sender.tag, section: 0) as IndexPath) as! TableViewCellSeeDetails7Ngay
         
-        let isMark = checkExitMark(item: thoitiet3H6Day.list[sender.tag])
-        let image = isMark ? UIImage(systemName: "heart") : UIImage(systemName: "heart.fill")
-        DispatchQueue.main.async {
-            cellTop.markButton.setImage(image, for: .normal)
+        if let cellTop = seeDetailsTableView.cellForRow(at: NSIndexPath(row: sender.tag, section: 0) as IndexPath) as? TableViewCellSeeDetails7Ngay {
+            let isMark = checkExitMark(item: thoitiet3H6Day.list[sender.tag])
+            let image = isMark ? UIImage(systemName: "heart") : UIImage(systemName: "heart.fill")
+            DispatchQueue.main.async {
+                cellTop.markButton.setImage(image, for: .normal)
+            }
+    //        print(isMark)
+            if !isMark {
+                addWeatherDetail(weather2: thoitiet3H6Day.list[sender.tag])
+            } else {
+                let index = getIndex(item: thoitiet3H6Day.list[sender.tag])
+                deleteWeatherDetail(index: index)
+            }
+            
+            print(thoitiet3H6Day.list[sender.tag].dt)
+        } else {
+            print("Error!")
         }
-//        print(isMark)
-        if !isMark {
-            addWeatherDetail(weather2: thoitiet3H6Day.list[sender.tag])
-        }
-        else{
-            let index = getIndex(item: thoitiet3H6Day.list[sender.tag])
-            deleteWeatherDetail(index: index)
-        }
-        
-        print(thoitiet3H6Day.list[sender.tag].dt)
-        
     }
     
-    func checkExitMark(item : Weather2) -> Bool {
-        if arrayWeatherDetailData.count > 0 {
-            for i in 0...arrayWeatherDetailData.count - 1{
-                if item.dt ==  Int(arrayWeatherDetailData[i].time)
-                && city.city == arrayWeatherDetailData[i].city {
+    func checkExitMark(item: Weather2) -> Bool {
+        if !arrayWeatherDetailData.isEmpty {
+            for index in 0...arrayWeatherDetailData.count - 1 {
+                if item.dt ==  Int(arrayWeatherDetailData[index].time)
+                && city.city == arrayWeatherDetailData[index].city {
                     return true
                 }
             }
@@ -197,10 +203,10 @@ extension ViewControllerSeeDetail7Ngay : UITableViewDelegate, UITableViewDataSou
     
     // lay vi tri trong coredata
     func getIndex(item : Weather2) -> Int {
-        for i in 0...arrayWeatherDetailData.count - 1{
-            if item.dt ==  Int(arrayWeatherDetailData[i].time)
-            && city.city == arrayWeatherDetailData[i].city {
-                return i
+        for index in 0...arrayWeatherDetailData.count - 1 {
+            if item.dt ==  Int(arrayWeatherDetailData[index].time)
+            && city.city == arrayWeatherDetailData[index].city {
+                return index
             }
         }
         return 0
@@ -208,14 +214,13 @@ extension ViewControllerSeeDetail7Ngay : UITableViewDelegate, UITableViewDataSou
     
     // animation
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.layer.transform = CATransform3DMakeScale(0.1,0.1,1)
+        cell.layer.transform = CATransform3DMakeScale(0.1, 0.1, 1)
         UIView.animate(withDuration: 0.5, animations: {
-            cell.layer.transform = CATransform3DMakeScale(1.05,1.05,1)
-            },completion: { finished in
+            cell.layer.transform = CATransform3DMakeScale(1.05, 1.05, 1)
+            }, completion: { _ in
                 UIView.animate(withDuration: 0.2, animations: {
-                    cell.layer.transform = CATransform3DMakeScale(1,1,1)
+                    cell.layer.transform = CATransform3DMakeScale(1, 1, 1)
                 })
         })
     }
 }
-

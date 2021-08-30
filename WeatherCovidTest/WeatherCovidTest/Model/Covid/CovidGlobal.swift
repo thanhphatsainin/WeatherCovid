@@ -30,7 +30,7 @@ struct GlobalState: Decodable {
 
 struct Global: Decodable {
     let totalConfirmed: Int
-    let totalDeaths : Int
+    let totalDeaths: Int
     let totalRecovered: Int
     
     init() {
@@ -39,7 +39,7 @@ struct Global: Decodable {
         totalRecovered = 0
     }
     
-    init(totalConfirmed : Int, totalDeaths:Int, totalRecovered:Int) {
+    init(totalConfirmed: Int, totalDeaths: Int, totalRecovered: Int) {
         self.totalConfirmed = totalConfirmed
         self.totalDeaths = totalDeaths
         self.totalRecovered = totalRecovered
@@ -58,8 +58,3 @@ struct Global: Decodable {
         totalRecovered  = try container.decode(Int.self, forKey: .totalRecovered)
     }
 }
-
-
-
-
-

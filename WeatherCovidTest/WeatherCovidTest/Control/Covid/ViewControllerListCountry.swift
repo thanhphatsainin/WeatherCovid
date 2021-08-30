@@ -13,7 +13,7 @@ protocol ChooseCountry{
 
 class ViewControllerListCountry: UIViewController {
 
-    @IBOutlet weak var listCountryTableView:
+    @IBOutlet weak private var listCountryTableView:
         UITableView!
     private var listCountry = [Country]()
     let repositoryAPI = RepositoryAPI()
@@ -60,12 +60,14 @@ class ViewControllerListCountry: UIViewController {
     
     @IBAction func clickSeachListCountry(_ sender: Any) {
 //        self.performSegue(withIdentifier: "showSearchListCountry", sender: nil)
-        let MHSEARCHLISTCOUNTRY = storyboard?.instantiateViewController(identifier: "MHSEARCHLISTCOUNTRY") as! ViewControllerSearchListCountry
-        MHSEARCHLISTCOUNTRY.listCountry = listCountry
-        self.navigationController?.pushViewController(MHSEARCHLISTCOUNTRY, animated: true)
+        if let MHSEARCHLISTCOUNTRY = storyboard?.instantiateViewController(identifier: "MHSEARCHLISTCOUNTRY") as? ViewControllerSearchListCountry {
+            MHSEARCHLISTCOUNTRY.listCountry = listCountry
+            self.navigationController?.pushViewController(MHSEARCHLISTCOUNTRY, animated: true)
+        } else {
+            print("Error click SeachListCountry")
+        }
     }
 }
-
 
 extension ViewControllerListCountry : UITableViewDataSource, UITableViewDelegate{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

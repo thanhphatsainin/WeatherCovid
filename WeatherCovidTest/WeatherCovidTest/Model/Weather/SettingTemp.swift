@@ -7,8 +7,8 @@
 
 import Foundation
 
-let KEY_TEMP_FORMAT = "TempFormat"
-let KEY_MARK_WEATHER = "Markweather"
+let KEYTEMPFORMAT = "TempFormat"
+let KEYMARKWEATHER = "Markweather"
 
 enum TempFormat:String, CaseIterable {
     case celsius = "Celcius ℃"

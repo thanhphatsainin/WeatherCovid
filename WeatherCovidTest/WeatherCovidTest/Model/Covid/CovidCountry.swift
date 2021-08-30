@@ -8,13 +8,13 @@
 import Foundation
 
 struct CovidCountry: Decodable {
-    let country : String
+    let country: String
     let confirmed: Int
-    let deaths : Int
+    let deaths: Int
     let recovered: Int
-    let active : Int
+    let active: Int
 //    private let date : Date
-    let date : String
+    let date: String
     
     init() {
         country = ""

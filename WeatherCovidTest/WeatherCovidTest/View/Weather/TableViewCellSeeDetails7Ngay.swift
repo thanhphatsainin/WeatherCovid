@@ -28,7 +28,7 @@ class TableViewCellSeeDetails7Ngay: UITableViewCell {
 
     }
     
-    func khoitaoDoC(item : Weather2?) {
+    func khoitaoDoC(item: Weather2?) {
         guard let item = item else {
             return
         }
@@ -52,7 +52,7 @@ class TableViewCellSeeDetails7Ngay: UITableViewCell {
         self.speedLB.text = String(item.wind.speed) + " m/s"
     }
     
-    func khoitaoDoF(item : Weather2?) {
+    func khoitaoDoF(item: Weather2?) {
         guard let item = item else {
             return
         }
@@ -76,7 +76,6 @@ class TableViewCellSeeDetails7Ngay: UITableViewCell {
         self.speedLB.text = String(item.wind.speed) + " m/s"
     }
 
-    
     @IBAction func clickMarkButton(_ sender: UIButton) {
 //        sender.addTarget(self, action: #selector(self.goodieButton(sender:)), for: .touchUpInside)
     }

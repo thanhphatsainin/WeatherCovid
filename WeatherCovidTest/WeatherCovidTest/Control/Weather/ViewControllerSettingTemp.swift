@@ -31,20 +31,19 @@ class ViewControllerSettingTemp: UIViewController {
     }
     
     private func updateTempFormatInUserDefaults(newValue: Int) {
-        UserDefaults.standard.set(newValue,forKey: KEY_TEMP_FORMAT)
+        UserDefaults.standard.set(newValue, forKey: KEYTEMPFORMAT)
     }
     
     private func loadTempFormatFromUserDefaults() {
-        if let indexTempFormat = UserDefaults.standard.value(forKey: KEY_TEMP_FORMAT) as? Int {
+        if let indexTempFormat = UserDefaults.standard.value(forKey: KEYTEMPFORMAT) as? Int {
             currentIndexTempFormat = indexTempFormat
-        }
-        else {
+        } else {
             currentIndexTempFormat = 0
         }
     }
 }
 
-extension ViewControllerSettingTemp : UITableViewDelegate, UITableViewDataSource{
+extension ViewControllerSettingTemp : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return TempFormat.allCases.count
     }
@@ -72,7 +71,4 @@ extension ViewControllerSettingTemp : UITableViewDelegate, UITableViewDataSource
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
-    
 }
-

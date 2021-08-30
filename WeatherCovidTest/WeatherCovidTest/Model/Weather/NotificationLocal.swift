@@ -63,6 +63,7 @@ struct NotificationLocal {
         // Step 5: Register the request
         center.add(request) { (error) in
             // Check the error parameter and handle any errors
+            print(error as Any)
         }
     }
     

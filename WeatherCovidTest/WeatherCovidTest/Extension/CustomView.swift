@@ -12,7 +12,7 @@ import UIKit
 class CustomView: UIView {
     
     override init(frame: CGRect) {
-        super.init(frame : frame)
+        super.init(frame: frame)
         setup()
     }
     
@@ -27,8 +27,7 @@ class CustomView: UIView {
     
     func styleButton() {
         setShawdow()
-        
-        //backgroundColor = .blue
+        // backgroundColor = .blue
         layer.cornerRadius = 10
         layer.borderWidth = 1.5
         layer.borderColor = UIColor.gray.cgColor  // mau duong vien

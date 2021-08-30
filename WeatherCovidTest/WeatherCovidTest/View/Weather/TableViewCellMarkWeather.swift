@@ -27,7 +27,7 @@ class TableViewCellMarkWeather: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    func khoitaoDoC(item : WeatherDetail) {
+    func khoitaoDoC(item: WeatherDetail) {
         let urlString = "http://openweathermap.org/img/wn/" + item.icon! + ".png"
         
         if let url = URL(string: urlString) {
@@ -49,7 +49,7 @@ class TableViewCellMarkWeather: UITableViewCell {
         self.city.text = item.city
     }
     
-    func khoitaoDoF(item : WeatherDetail) {
+    func khoitaoDoF(item: WeatherDetail) {
         let urlString = "http://openweathermap.org/img/wn/" + item.icon! + ".png"
         
         if let url = URL(string: urlString) {
@@ -70,5 +70,4 @@ class TableViewCellMarkWeather: UITableViewCell {
         self.speedLB.text = String(item.speed) + " m/s"
         self.city.text = item.city
     }
-
 }

@@ -12,7 +12,7 @@ class APIServiceWeather {
     
     static let shared = APIServiceWeather()
     
-    func pullJSONData(url: URL?, completion: @escaping (Result<Data, NetworkError>) -> Void){
+    func pullJSONData(url: URL?, completion: @escaping (Result<Data, NetworkError>) -> Void) {
         guard let url = url else {
             completion(.failure(.badURL))
             return
